@@ -1,0 +1,39 @@
+import React, {useLayoutEffect} from "react";
+import {Routes, Route, useLocation} from "react-router-dom";
+
+import Layout from "../layout";
+import LayoutNoSidebar from "../layout/NoSidebar"
+import Dashboard from "../pages/dashboard";
+import Error404 from "../pages/error/Error404";
+import Error504 from "../pages/error/Error504";
+import Register from "../pages/auth/Register";
+import Login from "../pages/auth/Login";
+import Forgot from "../pages/auth/Forgot";
+import Registrant from "../pages/registrant";
+
+const Router = () => {
+    const location = useLocation();
+    useLayoutEffect(() => {
+        window.scrollTo(0, 0);
+    }, [location]);
+
+    return (
+        <Routes>
+            <Route path={`${process.env.PUBLIC_URL}`} element={<Layout/>}>
+                <Route index element={<Dashboard/>}/>
+                <Route path="data-pendaftar" element={<Registrant/>}/>
+            </Route>
+            <Route path={`${process.env.PUBLIC_URL}`} element={<LayoutNoSidebar/>}>
+                <Route path="reset-sandi" element={<Forgot/>}></Route>
+                <Route path="pendaftaran" element={<Register/>}></Route>
+                <Route path="masuk" element={<Login/>}></Route>
+                <Route path="errors">
+                    <Route path="404" element={<Error404/>}></Route>
+                    <Route path="504" element={<Error504/>}></Route>
+                </Route>
+                <Route path="*" element={<Error404/>}></Route>
+            </Route>
+        </Routes>
+    );
+};
+export default Router;
