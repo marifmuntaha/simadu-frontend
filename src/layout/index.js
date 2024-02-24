@@ -9,19 +9,22 @@ import AppWrap from "./global/AppWrap";
 import Sidebar from "./sidebar";
 import {UserContext} from "../pages/user/UserContext";
 import {actionType, Dispatch} from "../reducer";
+import {SettingContext} from "../pages/setting/SettingContext";
 
 const Layout = ({title}) => {
     const [auth, setAuth] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [setting, setSetting] = useState([]);
     const [user, setUser] = useState([]);
     useEffect(() => {
+        Dispatch(actionType.INSTITUTION_SHOW, {setData: setSetting}, {id: 1}).then();
         Dispatch(actionType.AUTH_INFO, {
             setData: setUser,
             setAuth: setAuth
         }).then(() => setLoading(false));
     }, [])
     return !loading && (
-        <>
+        <SettingContext.Provider value={setting}>
             <Head title={!title && 'Memuat...'}/>
             {auth ? (
                 <UserContext.Provider value={user}>
@@ -39,7 +42,7 @@ const Layout = ({title}) => {
             ) : (
                 <Navigate to="/masuk"/>
             )}
-        </>
+        </SettingContext.Provider>
     );
 };
 export default Layout;

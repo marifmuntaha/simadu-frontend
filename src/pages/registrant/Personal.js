@@ -23,7 +23,7 @@ const Personal = (props) => {
     });
     const [birthday, setBirthday] = useState(moment().toDate());
     const [loading, setLoading] = useState(false);
-    const [registrant, setRegistrant] = useState({});
+    const [registrant, setRegistrant] = useState([]);
     const handleFormInput = (e) => {
         setFormData({...formData, [e.target.name]: e.target.value});
     };
@@ -32,12 +32,16 @@ const Personal = (props) => {
             setData: setRegistrant
         }, {
             user: user.id
-        }).then()
+        }).then((resp) => console.log(resp))
     }, []);
     
     return (
         <form className="content clearfix" onSubmit={(e) => {
             e.preventDefault();
+            Dispatch(actionType.REGISTRANT_STORE, {
+                formData: formData,
+                setLoading: setLoading
+            }).then((resp) => console.log(resp));
         }}>
             <Row className="gy-4">
                 <Col md="12">

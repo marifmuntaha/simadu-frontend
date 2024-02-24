@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import Logo from "../../images/limitless/logo.png";
 import LogoDark from "../../images/limitless/logo-dark.png";
 import Head from "../../layout/head";
@@ -40,7 +40,7 @@ const Login = () => {
             <PreviewCard className="card-bordered" bodyClass="card-inner-lg">
                 <BlockHead>
                     <BlockContent>
-                        <BlockTitle tag="h4">Masuk</BlockTitle>
+                        <BlockTitle tag="h4">Masuk SIMADU</BlockTitle>
                         <BlockDes>
                             <p>Masuk ke aplikasi menggunakan email & kata sandi anda.</p>
                         </BlockDes>

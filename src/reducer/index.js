@@ -5,6 +5,11 @@ let url = '';
 
 async function Dispatch(method, state, params) {
     switch (method) {
+        case actionType.INSTITUTION_SHOW :
+            url = `/master/institution/${params.id}`;
+            return await getData(url, state, params).then(resp => {
+                return resp;
+            });
         case actionType.AUTH_REGISTER :
             url = '/auth/register';
             return storeData(url, state).then(resp => {
@@ -21,27 +26,27 @@ async function Dispatch(method, state, params) {
                 return resp;
             });
         case actionType.REGISTRANT_GET :
-            url = '/aspect';
+            url = '/admission/registrant';
             return await getData(url, state, params).then(resp => {
                 return resp;
             });
         case actionType.REGISTRANT_STORE :
-            url = '/aspect';
+            url = '/admission/registrant';
             return await storeData(url, state).then(resp => {
                 return resp;
             });
         case actionType.REGISTRANT_SHOW :
-            url = `/aspect/${params.id}`;
+            url = `/admission/registrant/${params.id}`;
             return await getData(url, state, params).then(resp => {
                 return resp;
             });
         case actionType.REGISTRANT_UPDATE :
-            url = `/aspect/${state.formData.id}`;
+            url = `/admission/registrant/${state.formData.id}`;
             return await updateData(url, state).then(resp => {
                 return resp;
             });
         case actionType.REGISTRANT_DELETE :
-            url = `/aspect/${state.id}`;
+            url = `/admission/registrant/${state.id}`;
             return await deleteData(url, state).then(resp => {
                 return resp;
             });

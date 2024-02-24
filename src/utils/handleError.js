@@ -8,9 +8,6 @@ const handleError = (error) => {
         } else if (response.status === 401) {
             toastError('Sesi anda telah berakhir, silahkan masuk kembali.');
             localStorage.removeItem('token');
-            setTimeout(() => {
-                window.location.reload();
-            }, 2000);
         } else {
             toastError(response.data.message);
         }
