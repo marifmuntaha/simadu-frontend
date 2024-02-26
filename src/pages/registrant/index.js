@@ -11,6 +11,8 @@ import {
 } from "../../components";
 import {Step, Steps} from "react-step-builder";
 import Personal from "./Personal";
+import {ToastContainer} from "react-toastify";
+import Program from "./Program";
 const Registrant = () => {
     const Header = (props) => {
         return (
@@ -72,7 +74,7 @@ const Registrant = () => {
                     <div className="nk-wizard nk-wizard-simple is-alter wizard clearfix">
                         <Steps config={config}>
                             <Step component={Personal} />
-                            {/*<Step component={UserSettings} />*/}
+                            <Step component={Program} />
                             {/*<Step component={PaymentInfo} />*/}
                             {/*<Step component={Success} />*/}
                         </Steps>
@@ -80,6 +82,7 @@ const Registrant = () => {
                 </PreviewCard>
             </Block>
         </Content>
+        <ToastContainer/>
     </>
 }
 export default Registrant

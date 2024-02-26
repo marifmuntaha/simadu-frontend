@@ -23,6 +23,12 @@ const menuMember = [
         icon: "print",
         text: "Cetak Kartu",
         link: "/cetak-kartu",
-    }
+    },
+    {
+        icon: "print",
+        text: "Jurusan",
+        link: "/data-master/jurusan",
+    },
+
 ];
 export default menuMember;

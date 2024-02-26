@@ -25,6 +25,31 @@ async function Dispatch(method, state, params) {
             return await AuthInfo(url, state).then(resp => {
                 return resp;
             });
+        case actionType.MAJOR_GET :
+            url = '/master/major';
+            return await getData(url, state, params).then(resp => {
+                return resp;
+            });
+        case actionType.MAJOR_STORE :
+            url = '/master/major';
+            return await storeData(url, state).then(resp => {
+                return resp;
+            });
+        case actionType.MAJOR_SHOW :
+            url = `/master/major/${params.id}`;
+            return await getData(url, state, params).then(resp => {
+                return resp;
+            });
+        case actionType.MAJOR_UPDATE :
+            url = `/master/major/${state.formData.id}`;
+            return await updateData(url, state).then(resp => {
+                return resp;
+            });
+        case actionType.MAJOR_DELETE :
+            url = `/master/major/${state.id}`;
+            return await deleteData(url, state).then(resp => {
+                return resp;
+            });
         case actionType.REGISTRANT_GET :
             url = '/admission/registrant';
             return await getData(url, state, params).then(resp => {

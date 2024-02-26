@@ -41,7 +41,7 @@ const PaginationComponent = ({ itemPerPage, totalItems, paginate, currentPage })
 
   return (
     <Pagination aria-label="Page navigation example">
-      <PaginationItem disabled={currentPage - 1 === 0 ? true : false}>
+      <PaginationItem disabled={currentPage - 1 === 0}>
         <PaginationLink
           className="page-link-first"
           onClick={(ev) => {
@@ -53,7 +53,7 @@ const PaginationComponent = ({ itemPerPage, totalItems, paginate, currentPage })
           <Icon name="chevrons-left" />
         </PaginationLink>
       </PaginationItem>
-      <PaginationItem disabled={currentPage - 1 === 0 ? true : false}>
+      <PaginationItem disabled={currentPage - 1 === 0}>
         <PaginationLink
           className="page-link-prev"
           onClick={(ev) => {

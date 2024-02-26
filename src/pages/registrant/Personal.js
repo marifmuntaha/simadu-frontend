@@ -1,5 +1,5 @@
 import {useContext, useEffect, useState} from "react";
-import {Button, Col, Row} from "reactstrap";
+import {Button, Col, Row, Spinner} from "reactstrap";
 import {RSelect} from "../../components";
 import {setDateForPicker} from "../../utils/Utils";
 import DatePicker from "react-datepicker";
@@ -10,6 +10,9 @@ import {UserContext} from "../user/UserContext";
 const Personal = (props) => {
     const user = useContext(UserContext)
     const [formData, setFormData] = useState({
+        step: 1,
+        id: 0,
+        user: user.id,
         name: "",
         nisn: "",
         nik: "",
@@ -24,24 +27,65 @@ const Personal = (props) => {
     const [birthday, setBirthday] = useState(moment().toDate());
     const [loading, setLoading] = useState(false);
     const [registrant, setRegistrant] = useState([]);
+    const [genderSelected, setGenderSelected] = useState({});
+    const [statusFamilySelected, setStatusFamilySelected] = useState({});
+    const genderOption = [
+        {value: 1, label: 'Laki-laki'},
+        {value: 2, label: 'Perempuan'},
+    ];
+    const statusFamilyOption = [
+        {value: 1, label: 'Anak Kandung'},
+        {value: 2, label: 'Anak Tiri'},
+    ];
     const handleFormInput = (e) => {
         setFormData({...formData, [e.target.name]: e.target.value});
     };
     useEffect(() => {
-        Dispatch(actionType.REGISTRANT_GET, {
-            setData: setRegistrant
-        }, {
-            user: user.id
-        }).then((resp) => console.log(resp))
+        Dispatch(actionType.REGISTRANT_GET, {setData: setRegistrant}, {user: user.id})
+            .then((resp) => {
+                setFormData({
+                    step: 1,
+                    id: resp[0] ? resp[0].id : 0,
+                    user: resp[0] ? resp[0].user : user.id,
+                    name: resp[0] ? resp[0].name : '',
+                    nisn: resp[0] ? resp[0].nisn : '',
+                    nik: resp[0] ? resp[0].nik : '',
+                    gender: resp[0] ? resp[0].gender : 0,
+                    birthplace: resp[0] ? resp[0].birthplace : '',
+                    birthday: resp[0] ? resp[0].birthday : '',
+                    statusonfamily: resp[0] ? resp[0].statusonfamily : 0,
+                    placechild: resp[0] ? resp[0].placechild : 0,
+                    siblings: resp[0] ? resp[0].siblings : 0,
+                    phone: resp[0] ? resp[0].phone : '',
+                });
+                setGenderSelected(() => {
+                    return genderOption.filter((gender) => {
+                        return resp[0] && parseInt(resp[0].gender) === gender.value
+                    });
+                });
+                setStatusFamilySelected(() => {
+                    return statusFamilyOption.filter((status) => {
+                        return resp[0] && parseInt(resp[0].statusonfamily) === status.value
+                    });
+                });
+            });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-    
+
     return (
         <form className="content clearfix" onSubmit={(e) => {
             e.preventDefault();
-            Dispatch(actionType.REGISTRANT_STORE, {
-                formData: formData,
-                setLoading: setLoading
-            }).then((resp) => console.log(resp));
+            registrant.length !== 0
+                ? Dispatch(actionType.REGISTRANT_UPDATE, {formData: formData, setLoading: setLoading})
+                    .then((resp) => {
+                        // eslint-disable-next-line no-unused-expressions
+                        resp && props.next()
+                    })
+                : Dispatch(actionType.REGISTRANT_STORE, {formData: formData, setLoading: setLoading})
+                    .then((resp) => {
+                        // eslint-disable-next-line no-unused-expressions
+                        resp && props.next()
+                    });
         }}>
             <Row className="gy-4">
                 <Col md="12">
@@ -56,7 +100,7 @@ const Personal = (props) => {
                                 name="name"
                                 className="form-control"
                                 onChange={(e) => handleFormInput(e)}
-                                defaultValue={formData.name}/>
+                                value={formData.name}/>
                         </div>
                     </div>
                 </Col>
@@ -72,7 +116,7 @@ const Personal = (props) => {
                                 name="nisn"
                                 className="form-control"
                                 onChange={(e) => handleFormInput(e)}
-                                defaultValue={formData.nisn}/>
+                                value={formData.nisn}/>
                         </div>
                     </div>
                 </Col>
@@ -88,7 +132,7 @@ const Personal = (props) => {
                                 name="nik"
                                 className="form-control"
                                 onChange={(e) => handleFormInput(e)}
-                                defaultValue={formData.nik}/>
+                                value={formData.nik}/>
                         </div>
                     </div>
                 </Col>
@@ -99,13 +143,12 @@ const Personal = (props) => {
                         </label>
                         <div className="form-control-wrap">
                             <RSelect
-                                options={[
-                                    {value: 1, label: 'Laki-laki'},
-                                    {value: 2, label: 'Perempuan'},
-                                ]}
+                                options={genderOption}
                                 onChange={(e) => {
-                                    setFormData({...formData, gender: e.value})
+                                    setFormData({...formData, gender: e.value});
+                                    setGenderSelected(e);
                                 }}
+                                value={genderSelected}
                                 placeholder="Pilih Jenis Kelamin"
                             />
                         </div>
@@ -123,7 +166,7 @@ const Personal = (props) => {
                                 name="birthplace"
                                 className="form-control"
                                 onChange={(e) => handleFormInput(e)}
-                                defaultValue={formData.birthplace}/>
+                                value={formData.birthplace}/>
                         </div>
                     </div>
                 </Col>
@@ -155,13 +198,12 @@ const Personal = (props) => {
                         </label>
                         <div className="form-control-wrap">
                             <RSelect
-                                options={[
-                                    {value: 1, label: 'Anak Kandung'},
-                                    {value: 2, label: 'Anak Tiri'},
-                                ]}
+                                options={statusFamilyOption}
                                 onChange={(e) => {
-                                    setFormData({...formData, statusonfamily: e.value})
+                                    setFormData({...formData, statusonfamily: e.value});
+                                    setStatusFamilySelected(e);
                                 }}
+                                value={statusFamilySelected}
                                 placeholder="Pilih Status"
                             />
                         </div>
@@ -179,7 +221,7 @@ const Personal = (props) => {
                                 name="placechild"
                                 className="form-control"
                                 onChange={(e) => handleFormInput(e)}
-                                defaultValue={formData.placechild}/>
+                                value={formData.placechild}/>
                         </div>
                     </div>
                 </Col>
@@ -195,7 +237,7 @@ const Personal = (props) => {
                                 name="siblings"
                                 className="form-control"
                                 onChange={(e) => handleFormInput(e)}
-                                defaultValue={formData.siblings}/>
+                                value={formData.siblings}/>
                         </div>
                     </div>
                 </Col>
@@ -211,7 +253,7 @@ const Personal = (props) => {
                                 name="phone"
                                 className="form-control"
                                 onChange={(e) => handleFormInput(e)}
-                                defaultValue={formData.phone}/>
+                                value={formData.phone}/>
                         </div>
                     </div>
                 </Col>
@@ -219,8 +261,8 @@ const Personal = (props) => {
             <div className="actions clearfix">
                 <ul>
                     <li>
-                        <Button color="primary" type="submit">
-                            Next
+                        <Button color="primary" type="submit" disabled={loading}>
+                            {loading ? <Spinner size="sm"/> : 'Selanjutnya'}
                         </Button>
                     </li>
                 </ul>

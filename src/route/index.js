@@ -10,6 +10,7 @@ import Register from "../pages/auth/Register";
 import Login from "../pages/auth/Login";
 import Forgot from "../pages/auth/Forgot";
 import Registrant from "../pages/registrant";
+import Major from "../pages/master/major";
 
 const Router = () => {
     const location = useLocation();
@@ -22,6 +23,7 @@ const Router = () => {
             <Route path={`${process.env.PUBLIC_URL}`} element={<Layout/>}>
                 <Route index element={<Dashboard/>}/>
                 <Route path="data-pendaftar" element={<Registrant/>}/>
+                <Route path="data-master/jurusan" element={<Major/>}/>
             </Route>
             <Route path={`${process.env.PUBLIC_URL}`} element={<LayoutNoSidebar/>}>
                 <Route path="reset-sandi" element={<Forgot/>}></Route>
