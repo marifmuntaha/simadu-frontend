@@ -1,9 +1,6 @@
 import {useContext, useEffect, useState} from "react";
 import {Button, Col, Row, Spinner} from "reactstrap";
 import {RSelect} from "../../components";
-import {setDateForPicker} from "../../utils/Utils";
-import DatePicker from "react-datepicker";
-import moment from "moment";
 import {actionType, Dispatch} from "../../reducer";
 import {UserContext} from "../user/UserContext";
 
@@ -14,7 +11,7 @@ const Program = (props) => {
         id: 0,
         user: user.id,
         major: 1,
-        boarding: 1,
+        boarding: 0,
         program: 0,
     });
     const [loading, setLoading] = useState(false);
@@ -29,25 +26,42 @@ const Program = (props) => {
     const [programSelected, setProgramSelected] = useState([]);
     const [programOption, setProgramOption] = useState([]);
     useEffect(() => {
-        Dispatch(actionType.MAJOR_GET, {setData: setMajorOption}, {type: 'select'}).then();
         Dispatch(actionType.REGISTRANT_GET, {setData: setRegistrant}, {user: user.id})
-            .then((resp) => {
+            .then((registrant) => {
                 setFormData({
                     step: 2,
-                    id: resp[0] ? resp[0].id : 0,
-                    user: resp[0] ? resp[0].user : user.id,
-                    major: resp[0] ? resp[0].major : 1,
-                    boarding: resp[0] ? resp[0].boarding : 1,
-                    program: resp[0] ? resp[0].program : 1,
+                    id: registrant[0] ? registrant[0].id : 0,
+                    user: registrant[0] ? registrant[0].user : user.id,
+                    major: registrant[0] ? registrant[0].major : 1,
+                    boarding: registrant[0] ? registrant[0].boarding : 1,
+                    program: registrant[0] ? registrant[0].program : 1,
                 });
-                setMajorSelected(() => {
-                    return majorOption.filter((major) => {
-                        return resp[0] && parseInt(resp[0].major) === major.value
+                Dispatch(actionType.MAJOR_GET,{})
+                    .then((majors) => {
+                        let major = majors.filter((major) => {
+                            return parseInt(registrant[0].major) === major.id
+                        });
+                        let program = JSON.parse(major[0].program);
+                        setMajorOption(() => {
+                            return majors.map((item) => {
+                                return {value: item.id, label: item.alias + ' - ' + item.name}
+                            });
+                        });
+                        setMajorSelected(() => {
+                            return major.map((item) => {
+                                return {value: item.id, label: item.alias + ' - ' + item.name}
+                            });
+                        });
+                        setProgramOption(program);
+                        setProgramSelected(() => {
+                            return program.filter((item) => {
+                                return item.value === registrant[0].program
+                            })
+                        })
                     });
-                });
                 setBoardingSelected(() => {
                     return boardingOption.filter((boarding) => {
-                        return resp[0] && parseInt(resp[0].boarding) === boarding.value
+                        return registrant[0] && parseInt(registrant[0].boarding) === boarding.value
                     });
                 });
             });
@@ -56,7 +70,7 @@ const Program = (props) => {
     return (
         <form className="content clearfix" onSubmit={(e) => {
             e.preventDefault();
-            Dispatch(actionType.REGISTRANT_UPDATE, { formData: formData, setLoading: setLoading})
+            Dispatch(actionType.REGISTRANT_UPDATE, {formData: formData, setLoading: setLoading})
                 .then((resp) => {
                     // eslint-disable-next-line no-unused-expressions
                     resp && props.next()
@@ -116,7 +130,6 @@ const Program = (props) => {
                                     setProgramSelected(e);
                                 }}
                                 value={programSelected}
-                                isDisabled={formData.boarding !== 1}
                                 placeholder="Pilih Program"
                             />
                         </div>

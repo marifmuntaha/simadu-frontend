@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import Head from "../../layout/head";
 import Content from "../../layout/content";
 import {
@@ -13,6 +13,7 @@ import {Step, Steps} from "react-step-builder";
 import Personal from "./Personal";
 import {ToastContainer} from "react-toastify";
 import Program from "./Program";
+import Parent from "./Parent";
 const Registrant = () => {
     const Header = (props) => {
         return (
@@ -75,7 +76,7 @@ const Registrant = () => {
                         <Steps config={config}>
                             <Step component={Personal} />
                             <Step component={Program} />
-                            {/*<Step component={PaymentInfo} />*/}
+                            <Step component={Parent} />
                             {/*<Step component={Success} />*/}
                         </Steps>
                     </div>
