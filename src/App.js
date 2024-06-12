@@ -1,12 +1,12 @@
-import Router from "./route";
+import AllRoutes from "./route/Routes";
 
 import ThemeProvider from "./layout/provider/Theme";
 
 const App = () => {
-  return (
-      <ThemeProvider>
-        <Router />
-      </ThemeProvider>
-  );
+    return (
+        <ThemeProvider>
+            <AllRoutes/>
+        </ThemeProvider>
+    );
 };
 export default App;
